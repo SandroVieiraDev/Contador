@@ -1,27 +1,30 @@
 package com.env.contadorx.fragment;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.env.contadorx.R;
+import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private LinearLayout linearTimer;
     private TextView textScore, textTimer;
-    private ImageView imageMinus, imageRefresh, imagePlus;
+    private ImageView imageMinus, imageReset, imagePlus;
+    private boolean countingTimer;
+    private Timer timer = new Timer();
+    private TimerTask timerTask;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,12 +81,60 @@ public class HomeFragment extends Fragment {
         textScore = view.findViewById(R.id.textScore);
         textTimer = view.findViewById(R.id.textTimer);
         imageMinus = view.findViewById(R.id.imageMinus);
-        imageRefresh = view.findViewById(R.id.imageRefresh);
+        imageReset = view.findViewById(R.id.imageReset);
         imagePlus = view.findViewById(R.id.imagePlus);
 
+        linearTimer.setOnClickListener(this);
+        imageMinus.setOnClickListener(this);
+        imageReset.setOnClickListener(this);
+        imagePlus.setOnClickListener(this);
+
+        linearTimer.setOnLongClickListener(this);
+
         view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.linearTimer:
+                stopStartTimer();
+                break;
+            case R.id.imageMinus:
+                minusScore();
+                break;
+            case R.id.imageReset:
+                resetScore();
+                break;
+            case R.id.imagePlus:
+                plusScore();
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        resetTimer();
+        return true;
+    }
+
+    public void resetTimer(){
+        if(countingTimer){
+            countingTimer = false;
+            timerTask.cancel();
+        }
+        textTimer.setText("00:00");
+    }
+
+    public void stopStartTimer(){
+        if(countingTimer){
+            countingTimer = false;
+            timerTask.cancel();
+        } else {
+            countingTimer = true;
+            runTimer();
+        }
+    }
 
 
     public void minusScore(){
@@ -101,7 +152,31 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void refreshScore(){
+    public void resetScore(){
         textScore.setText("0");
     }
+
+    public void runTimer(){
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread((Runnable) () -> timeCount());
+                }
+            };
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+        }
+
+    public void timeCount(){
+        int sec = Integer.parseInt(textTimer.getText().toString().substring(3, 5));
+        sec++;
+        String min = textTimer.getText().toString().substring(0,2);
+        if(sec==60){
+            int m = Integer.parseInt(min);
+            m++;
+            min = new DecimalFormat("00").format(m);
+            sec = 0;
+        }
+        textTimer.setText(min + ":" + new DecimalFormat("00").format(sec));
+    }
+
 }

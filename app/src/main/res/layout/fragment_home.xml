@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:background="@color/back_grey">
+            android:background="@drawable/back_timer">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,9 +88,9 @@
                 android:layout_height="80dp"
                 android:layout_weight="1"
                 android:src="@drawable/ic_exposure_minus_1_black"
-                android:scaleType="center"/>
+                android:scaleType="center" />
             <ImageView
-                android:id="@+id/imageRefresh"
+                android:id="@+id/imageReset"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_weight="1"
