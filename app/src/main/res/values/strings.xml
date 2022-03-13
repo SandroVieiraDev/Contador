@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Contador</string>
+    <string name="app_name_up">CONTADOR</string>
+    <string name="text_description">TOQUE NA ÁREA CINZA PARA CONTROLAR O TEMPO</string>
 </resources>
