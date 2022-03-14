@@ -1,15 +1,21 @@
-package com.env.contadorx.fragment;
+package com.env.contadorx.ui.view.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.env.contadorx.R;
+import com.env.contadorx.base.BaseFragment;
+import com.env.contadorx.ui.view.binding.HomeFragmentViewBinding;
+
 import java.text.DecimalFormat;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,10 +24,8 @@ import java.util.TimerTask;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
-    private LinearLayout linearTimer;
-    private TextView textScore, textTimer;
-    private ImageView imageMinus, imageReset, imagePlus;
+public class HomeFragment extends BaseFragment implements View.OnClickListener, View.OnLongClickListener {
+    private HomeFragmentViewBinding binding;
     private boolean countingTimer;
     private Timer timer = new Timer();
     private TimerTask timerTask;
@@ -71,30 +75,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
-        initialize(fragmentView);
+
+        binding = new HomeFragmentViewBinding(fragmentView);
+        init();
 
         return fragmentView;
     }
 
-    public void initialize(View view){
-        linearTimer = view.findViewById(R.id.linearTimer);
-        textScore = view.findViewById(R.id.textScore);
-        textTimer = view.findViewById(R.id.textTimer);
-        imageMinus = view.findViewById(R.id.imageMinus);
-        imageReset = view.findViewById(R.id.imageReset);
-        imagePlus = view.findViewById(R.id.imagePlus);
+    @Override
+    protected void init() {
+        binding.linearTimer.setOnClickListener(this);
+        binding.imageMinus.setOnClickListener(this);
+        binding.imageReset.setOnClickListener(this);
+        binding.imagePlus.setOnClickListener(this);
 
-        linearTimer.setOnClickListener(this);
-        imageMinus.setOnClickListener(this);
-        imageReset.setOnClickListener(this);
-        imagePlus.setOnClickListener(this);
+        binding.linearTimer.setOnLongClickListener(this);
 
-        linearTimer.setOnLongClickListener(this);
-
-        view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
+        binding.getViewRoot().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        requireActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -123,7 +124,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
             countingTimer = false;
             timerTask.cancel();
         }
-        textTimer.setText("00:00");
+        binding.textTimer.setText("00:00");
     }
 
     public void stopStartTimer(){
@@ -138,22 +139,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 
 
     public void minusScore(){
-        String score = textScore.getText().toString();
+        String score = binding.textScore.getText().toString();
         if(!score.equals("0")){
             int c = Integer.parseInt(score); c--;
-            textScore.setText(String.valueOf(c));
+            binding.textScore.setText(String.valueOf(c));
         }
     }
 
     public void plusScore(){
-        String score = textScore.getText().toString();
+        String score = binding.textScore.getText().toString();
         int c = Integer.parseInt(score); c++;
-        textScore.setText(String.valueOf(c));
+        binding.textScore.setText(String.valueOf(c));
 
     }
 
     public void resetScore(){
-        textScore.setText("0");
+        binding.textScore.setText("0");
     }
 
     public void runTimer(){
@@ -167,16 +168,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         }
 
     public void timeCount(){
-        int sec = Integer.parseInt(textTimer.getText().toString().substring(3, 5));
+        int sec = Integer.parseInt(binding.textTimer.getText().toString().substring(3, 5));
         sec++;
-        String min = textTimer.getText().toString().substring(0,2);
+        String min = binding.textTimer.getText().toString().substring(0,2);
         if(sec==60){
             int m = Integer.parseInt(min);
             m++;
             min = new DecimalFormat("00").format(m);
             sec = 0;
         }
-        textTimer.setText(min + ":" + new DecimalFormat("00").format(sec));
+        binding.textTimer.setText(min + ":" + new DecimalFormat("00").format(sec));
     }
-
 }

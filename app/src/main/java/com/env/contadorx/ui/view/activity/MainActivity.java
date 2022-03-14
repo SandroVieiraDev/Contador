@@ -1,10 +1,10 @@
-package com.env.contadorx.activity;
+package com.env.contadorx.ui.view.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import com.env.contadorx.R;
-import com.env.contadorx.fragment.SplashFragment;
+import com.env.contadorx.ui.view.fragment.SplashFragment;
 
 public class MainActivity extends AppCompatActivity {
     private SplashFragment splashFragment;

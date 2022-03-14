@@ -1,4 +1,4 @@
-package com.env.contadorx.fragment;
+package com.env.contadorx.ui.view.fragment;
 
 import android.os.Bundle;
 
@@ -11,13 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.env.contadorx.R;
+import com.env.contadorx.base.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SplashFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SplashFragment extends Fragment {
+public class SplashFragment extends BaseFragment {
     private HomeFragment homeFragment;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -65,11 +66,12 @@ public class SplashFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_splash, container, false);
-        initizalize();
+        init();
         return fragmentView;
     }
 
-    public void initizalize(){
+    @Override
+    protected void init() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -80,3 +82,4 @@ public class SplashFragment extends Fragment {
         }, 2000);
     }
 }
+
